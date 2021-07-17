@@ -1,10 +1,10 @@
 # azureprivatelinkdemo
 
 # Azure Private Link Demo
-This is a demo showing the usage of private link whyen using Azure Fileshare in an Enterprise Setting
+This is a demo showing the usage of private link when using Azure Fileshare in an Enterprise Setting.
 
 ## DevOps workflow and Architecture
-![Architecture Diagram](assets/infra-architecture.jpg)
+![Architecture Diagram](assets/infra-architecture.png)
 # Infrastructure Breakdown
  **Infrastructure:**
 Here is an architecture built on Microsoft Azure taking advantage of its AppService Offering.
