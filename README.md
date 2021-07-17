@@ -117,7 +117,7 @@ Repeat the same step to create a service connection for ACR:
 
 ## Create a multi Stage pipeline with Yaml
 
-First fork the [repo](https://github.com/Abdulthetechguy/Springdemo) by clicking on the fork icon on the top right
+First fork the [repo](https://github.com/abulina/azureprivatelinkdemo) by clicking on the fork icon on the top right
 
 ![forkrepo](assets/repofork.png)
 
@@ -136,11 +136,3 @@ Login to Github and authorize it for Azure DevOps. Select the forked repo and it
 **See a complete build and release below:**
 
 ![buildstages](assets/completebuild.jpeg)
-
-## Application HomePage
-
-![buildstages](assets/website.png)
-
-# Building the Project with Jenkins and Terraform on AWS
-
-Here is the link to [repo](https://github.com/Abdulthetechguy/Spring-React-CI-CD-Jenkis-AWS) that contains the project and instruction on how to build on AWS using packer,Jenkins, terraform and Ansible. Still a work in progress
