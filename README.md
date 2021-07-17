@@ -1,37 +1,31 @@
-# azureprivatelinkdemo
-
 # Azure Private Link Demo
 
 This is a demo showing the usage of private link when using Azure Fileshare in an Enterprise Setting.
 
-## Infrastructure Diagram
+# Infrastructure Diagram
 
 ![Architecture Diagram](assets/infra-architecture.png)
 
 # Infrastructure Breakdown
 
 **Infrastructure:**
-Here is an architecture built on Microsoft Azure taking advantage of its AppService Offering.
-
-App Service provides the managed virtual machines (VMs) that host your app. All apps associated with a plan run on the same VM instances.
-
-I chose AppService because it has Linux Container webapp offering that can host docker containers and its cost effective.
-
-There is also a mysql deployed for the database
+Here is a Hybrid architecture built on Microsoft Azure. The Azure Network Architecture is a traditional Hub and Spoke with vnet connectivity using Vnet Peering.
+To simulate an onprem environment, I used a vnet called on-premise vnet and added a VPN Gateway to simulate an on-prem VPN device that will connect to an Azure vnet using a S2S VPN link.
 
 # Infrastructure Component
 
-## Monitoring and Auditing
+## AD and DNS
 
-The AppService is integrated with Azure Application Insight for monitoring. It collects different metrics such us request rate, response time, failure rate etc. It could also detect anomalies within the application. Auditing is done using the Activity Log.
+Active Directory is deployed on VM's both on the on-prem vnet and on the Hub vnet.
 
-## AutoScaling
+## Private Link
 
-I am using Standard AppService Tier which could scale up to 10 instances. Its has been configured to scale based on CPU metric. When the CPU consumption hit 70% it scales up automatically and scale down when it goes below 30%
+I am using Azure Private Link Service to deploy an Azure Private endpoint inside the Hub vnet. This deploys a read-only NIC to be able to reach our fileshare service privately using a private IP address i.s.o. the public ip address.
+Because I am leveraging the Hub and Spoke architecture, the spoke vnet can access the fileshare as well. The onprem vnet can access it as well due to the connectivity via VPN Gateway.
 
 ## Authentication
 
-Leveraging Azure Active Directory for authentication and authorization. With this, multiple users can be invited to login with their personal accounts and permission to resources can be granted.
+Leveraging Traditional Active Directory authentication and permissions on the Azure fileshares using a combination of scripts and DNS configurations.
 
 # How to deploy the Infrastructure on your environment?
 
@@ -45,19 +39,13 @@ Running the pipeline will do the following:
 
 1. Check out the code
 
-2. Build an ACR if it doesn’t exist
+2. Build the and test the code base
 
-3. Create a mysql database for the backend
+3. Publish Artifact (ARM template) to build the infrastructure for the 3 stages
 
-4. Build the and test the code base
+4. Deploy to DEV, STG and PRD stage
 
-5. Build the docker image and push to azure registry
-
-6. Publish Artifact (ARM template) to build the infrastructure (Linux container appservice) for the 3 stages
-
-7. Deploy docker image to DEV, STG and PRD stage
-
-8. There is a destroy stage (Using pipeline approval). Click on it to review and approve to destroy the whole infrastructure built
+5. There is a destroy stage (Using pipeline approval). Click on it to review and approve to destroy the whole infrastructure built
 
 # Prerequisite:
 
@@ -66,8 +54,6 @@ Running the pipeline will do the following:
 - **Azure Subscription:** An azure subscription is needed to provision the Azure services for this demonstration. If you don’t have one, you can get a free trial one [here](https://azure.microsoft.com/free/). Create an azure DevOps project
 
 - **Bash Shell:** we will leverage Azure Cloud Shell. Once your Azure Subscription is set up you can enable and use your associated [Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview) session. Notes: you could use any local bash terminal. Make sure you have [installed the Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)
-
-- **Container registry:** we will use Azure Container Registry (ACR) to store our Docker images. Run the command below to create an ACR
 
 - **Service Principal:** we will leverage SPN with contributor access to create resources on Azure from Azure DevOps
 
@@ -79,12 +65,7 @@ Running the pipeline will do the following:
     az account set --subscription <subscription  id>
     #Create Resource Group
     #az group create --name <rgname> --location <region>
-    az group create --name spring-demo --location 'West US'
-
-**Create an ACR registry**
-
-#az acr create --resource-group akshandsonlab --name <unique-acr-name> --sku Standard --location <region> --admin-enabled true
-az acr create --resource-group spring-demo --name springacr2021 --sku Standard --location 'West US' --admin-enabled true
+    az group create --name spring-demo --location 'West Europe'
 
 **To create a Service Principal Name**
 
@@ -93,7 +74,7 @@ az acr create --resource-group spring-demo --name springacr2021 --sku Standard -
 
 ## Create a Build / Continuous Integration (CI) pipeline and continuous delivery (CD)
 
-Create a service connection for ACR and for the pipeline using the details of the service principal created earlier
+Create a service connection for the pipeline using the details of the service principal created earlier
 
 ![Service Connection](assets/serviceconnection.png)
 
@@ -106,14 +87,6 @@ Create a service connection for ACR and for the pipeline using the details of th
 - **Tenant ID :** < Your Tenant ID>
 - **Service Connection Name:** <Service  connection  Name> This will be referenced in the YAML pipeline
 - **Click on save and verify**
-
-Repeat the same step to create a service connection for ACR:
-
-- Click on service Connection
-- Click on Docker Registry
-- Select Azure Container Registry.
-- Select your prefered subscription
-- Give a connection name. This will later be referenced in the YAML pipeline to connect to the registry
 
 ## Create a multi Stage pipeline with Yaml
 
