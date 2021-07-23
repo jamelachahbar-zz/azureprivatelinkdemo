@@ -1,0 +1,207 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+        "name": "PrivateLink with DNS Lab",
+        "description": "Create or update a Private Link Resource"
+    },
+  "parameters": {
+    "location": {
+      "type": "string"
+    },
+    "privateEndpointName": {
+      "type": "string"
+    },
+    "privateLinkResource": {
+      "type": "string"
+    },
+    "targetSubResource": {
+      "type": "array"
+    },
+    "subnet": {
+      "type": "string"
+    },
+    "virtualNetworkId": {
+      "type": "string"
+    },
+    "virtualNetworkResourceGroup": {
+      "type": "string"
+    },
+    "subnetDeploymentName": {
+      "type": "string"
+    },
+    "privateDnsDeploymentName": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "location": "[parameters('location')]",
+      "name": "[parameters('privateEndpointName')]",
+      "type": "Microsoft.Network/privateEndpoints",
+      "apiVersion": "2020-03-01",
+      "properties": {
+        "subnet": {
+          "id": "[parameters('subnet')]"
+        },
+        "privateLinkServiceConnections": [
+          {
+            "name": "[parameters('privateEndpointName')]",
+            "properties": {
+              "privateLinkServiceId": "[parameters('privateLinkResource')]",
+              "groupIds": "[parameters('targetSubResource')]"
+            }
+          }
+        ]
+      },
+      "tags": {},
+      "dependsOn": ["[parameters('subnetDeploymentName')]"]
+    },
+    {
+      "apiVersion": "2017-05-10",
+      "name": "[parameters('subnetDeploymentName')]",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('virtualNetworkResourceGroup')]",
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            {
+              "name": "hub-vnet/PrivateEndpointSubnet",
+              "id": "/subscriptions/5ee81eb2-34ff-41c6-b135-b8ac47601ef6/resourceGroups/privatelink-dns-microhack-rg/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/PrivateEndpointSubnet",
+              "properties": {
+                "provisioningState": "Succeeded",
+                "addressPrefix": "10.0.2.0/24",
+                "serviceEndpoints": [],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+              },
+              "type": "Microsoft.Network/virtualNetworks/subnets",
+              "apiVersion": "2020-06-01"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-05-10",
+      "name": "[parameters('privateDnsDeploymentName')]",
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": ["[parameters('privateEndpointName')]"],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            {
+              "apiVersion": "2017-05-10",
+              "name": "PrivateDnsZone-528a6410-d348-46dc-a159-d0cc881d402f",
+              "type": "Microsoft.Resources/deployments",
+              "subscriptionId": "5ee81eb2-34ff-41c6-b135-b8ac47601ef6",
+              "resourceGroup": "privatelink-dns-microhack-rg",
+              "properties": {
+                "mode": "Incremental",
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "resources": [
+                    {
+                      "type": "Microsoft.Network/privateDnsZones",
+                      "apiVersion": "2018-09-01",
+                      "name": "privatelink.file.core.windows.net",
+                      "location": "global",
+                      "tags": {},
+                      "properties": {}
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-05-10",
+      "name": "VirtualNetworkLink-20210612202741",
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": ["[parameters('privateDnsDeploymentName')]"],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            {
+              "apiVersion": "2017-05-10",
+              "name": "VirtualNetworklink-528a6410-d348-46dc-a159-d0cc881d4030",
+              "type": "Microsoft.Resources/deployments",
+              "subscriptionId": "5ee81eb2-34ff-41c6-b135-b8ac47601ef6",
+              "resourceGroup": "privatelink-dns-microhack-rg",
+              "properties": {
+                "mode": "Incremental",
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "resources": [
+                    {
+                      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+                      "apiVersion": "2018-09-01",
+                      "name": "[concat('privatelink.file.core.windows.net', '/', uniqueString(parameters('virtualNetworkId')))]",
+                      "location": "global",
+                      "properties": {
+                        "virtualNetwork": {
+                          "id": "[parameters('virtualNetworkId')]"
+                        },
+                        "registrationEnabled": false
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-05-10",
+      "name": "DnsZoneGroup-20210612202741",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "privatelink-dns-microhack-rg",
+      "dependsOn": [
+        "[parameters('privateEndpointName')]",
+        "[parameters('privateDnsDeploymentName')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            {
+              "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+              "apiVersion": "2020-03-01",
+              "name": "[concat(parameters('privateEndpointName'), '/', 'default')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "privateDnsZoneConfigs": [
+                  {
+                    "name": "privatelink-file-core-windows-net",
+                    "properties": {
+                      "privateDnsZoneId": "/subscriptions/5ee81eb2-34ff-41c6-b135-b8ac47601ef6/resourceGroups/privatelink-dns-microhack-rg/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.windows.net"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
