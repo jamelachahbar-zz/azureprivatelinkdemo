@@ -2,17 +2,56 @@
 
 This is a demo showing the usage of private link when using Azure Fileshare in an Enterprise Setting.
 
-# Infrastructure Diagram
+# Contents
+
+[Demolab introduction and context](#Scenario)
+
+[Challenge 1 : Deploy a Private Endpoint to utilise Azure Private Link for access to Azure Fileshare](#challenge-1--deploy-a-private-endpoint-to-utilise-azure-private-link-for-access-to-azure-fileshare)
+
+[Challenge 2 : Deny public access to Azure File Share](#challenge-2--deny-public-access-to-azure-file-share)
+
+[Challenge 3 : Work with a custom DNS server inside of Azure](#challenge-5--work-with-a-custom-dns-server-inside-of-azure)
+
+[Challenge 4 : Use Private Link to access an Azure Fileshare over a Private Hybrid Connection](#challenge-4--use-private-link-to-access-an-azure-fileshare-over-a-private-hybrid-connection)
+
+[Challenge 5 : (Warning! Stretch Goal / Advanced) Use Private Link from On-Premises without a pre-existing DNS Server in Azure](#challenge-7--warning-stretch-goal--advanced-use-private-link-from-on-premises-without-a-pre-existing-dns-server-in-azure)
+
+# Scenario
+
+Inc. Corporation is a Communications Company. The organisation works within a regulated industry and would like to secure their use of Azure Platform-as-a-service (PaaS) products. As part of their ongoing evaluation of platform features, the IT team has started to look at using **Azure Private Link**.
+
+## Context
+
+This Lab walks through the use of Azure Private Link with a focus on the required changes needed for DNS. Specifically, this builds up to include working with an existing custom DNS infrastructure (I.e. a customer using their own Virtual Machines for Internal DNS Resolution). In this lab we use Microsoft DNS running on top of Microsoft Windows Server 2019.
+
+# Pre-requisites
+
+## Overview
+
+In order to use the Demolab time most effectively, the following tasks should be completed prior to starting the session.
+With these pre-requisites in place, we can focus on building the differentiated knowledge in Private Link that is required when working with the product, rather than spending hours repeating relatively simple tasks such as setting up Virtual Networks and Virtual Machines.
+
+At the end of this section your base lab build looks as follows:
 
 ![Architecture Diagram](assets/infra-architecture.png)
 
-# Infrastructure Breakdown
+# Infrastructure:
 
-**Infrastructure:**
 Here is a Hybrid architecture built on Microsoft Azure. The Azure Network Architecture is a traditional Hub and Spoke with vnet connectivity using Vnet Peering.
 To simulate an onprem environment, I used a vnet called on-premise vnet and added a VPN Gateway to simulate an on-prem VPN device that will connect to an Azure vnet using a S2S VPN link.
 
-# Infrastructure Component
+# Infrastructure Breakdown
+
+In summary:
+
+- "On-Premises" environment simulated by Azure Virtual Network
+- On-Premises contains a management VM (_onprem-mgmt-vm_) and a dns server VM (_onprem-dns-vm_)
+- On-Premises is connected to Azure via a Site-to-Site VPN
+- Azure contains a simple Hub and Spoke topology, containing a management VM in the spoke (_az-mgmt-vm_) and a dns server VM in the hub (_az-dns-vm_)
+- Azure Bastion is deployed in all VNets to enable easy remote desktop access to the Windows VMs
+- All of the above is deployed within a single resource group called _azureprivatelink-demo-rg_
+
+# Infrastructure Components
 
 ## AD and DNS
 
@@ -87,6 +126,10 @@ Create a service connection for the pipeline using the details of the service pr
 - **Tenant ID :** < Your Tenant ID>
 - **Service Connection Name:** <Service  connection  Name> This will be referenced in the YAML pipeline
 - **Click on save and verify**
+
+## :checkered_flag: Results
+
+- You have deployed a
 
 ## Create a multi Stage pipeline with Yaml
 
