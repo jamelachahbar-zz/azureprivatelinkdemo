@@ -16,12 +16,14 @@ This is a demo showing the usage of private link when using Azure Fileshare in a
 
 [Challenge 5 : (Warning! Stretch Goal / Advanced) Use Private Link from On-Premises without a pre-existing DNS Server in Azure](#challenge-7--warning-stretch-goal--advanced-use-private-link-from-on-premises-without-a-pre-existing-dns-server-in-azure)
 
+[Challenge 6: Part one: enable AD DS authentication for your Azure file shares](#challenge-6--enable-ADDS-authentication-for-your-azure-fileshare)
+Part two: assign share-level permissions to an identity
+Part three: configure directory and file level permissions over SMB
+Part four: mount a file share from a domain-joined VM
 # Scenario
-
 Inc. Corporation is a Communications Company. The organisation works within a regulated industry and would like to secure their use of Azure Platform-as-a-service (PaaS) products. As part of their ongoing evaluation of platform features, the IT team has started to look at using **Azure Private Link**.
 
-## Context
-
+# Context
 This Lab walks through the use of Azure Private Link with a focus on the required changes needed for DNS. Specifically, this builds up to include working with an existing custom DNS infrastructure (I.e. a customer using their own Virtual Machines for Internal DNS Resolution). In this lab we use Microsoft DNS running on top of Microsoft Windows Server 2019.
 
 # Pre-requisites
@@ -152,3 +154,6 @@ Login to Github and authorize it for Azure DevOps. Select the forked repo and it
 **See a complete build and release below:**
 
 ![buildstages](assets/completebuild.jpeg)
+
+# challenge-1--deploy-a-private-endpoint-to-utilise-azure-private-link-for-access-to-azure-fileshare
+

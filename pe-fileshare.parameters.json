@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+      "location": {
+          "value": "westeurope"
+      },
+      "privateEndpointName": {
+          "value": "plstgazureprivatelink"
+      },
+      "privateLinkResource": {
+          "value": "/subscriptions/432358e4-068f-47b1-850a-9a94ab04ad9a/resourceGroups/privatelinkdns/providers/Microsoft.Storage/storageAccounts/stgazureprivatelink"
+      },
+      "targetSubResource": {
+          "value": [
+              "file"
+          ]
+      },
+      "requestMessage": {
+          "value": ""
+      },
+      "subnet": {
+          "value": "/subscriptions/432358e4-068f-47b1-850a-9a94ab04ad9a/resourceGroups/privatelinkdns/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/PrivateEndpointSubnet"
+      },
+      "virtualNetworkId": {
+          "value": "/subscriptions/432358e4-068f-47b1-850a-9a94ab04ad9a/resourceGroups/privatelinkdns/providers/Microsoft.Network/virtualNetworks/hub-vnet"
+      },
+      "subnetDeploymentName": {
+          "value": "UpdateSubnetDeployment-20210724004805"
+      },
+      "virtualNetworkResourceGroup": {
+          "value": "privatelinkdns"
+      },
+      "privateDnsDeploymentName": {
+          "value": "PrivateDns-20210724004805"
+      }
+  }
+}

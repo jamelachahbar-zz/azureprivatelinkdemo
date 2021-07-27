@@ -6,91 +6,91 @@
     "description": "Create or update a Hub and Spoke Infrastructure connected to an on-prem environment."
   },
   "parameters": {
-    "hubvnetName": {
+    "virtualNetworks_hub_vnet_name": {
       "defaultValue": "hub-vnet",
       "type": "String"
     },
-    "azDnsVmName": {
+    "virtualMachines_az_dns_vm_name": {
       "defaultValue": "az-dns-vm",
       "type": "String"
     },
-    "azMgmtVmName": {
+    "virtualMachines_az_mgmt_vm_name": {
       "defaultValue": "az-mgmt-vm",
       "type": "String"
     },
-    "spokeVnetName": {
+    "virtualNetworks_spoke_vnet_name": {
       "defaultValue": "spoke-vnet",
       "type": "String"
     },
-    "hub-onprem-connectionName": {
+    "connections_hub_onprem_conn_name": {
       "defaultValue": "hub-onprem-conn",
       "type": "String"
     },
-    "onprem-hub-connectionName": {
+    "connections_onprem_hub_conn_name": {
       "defaultValue": "onprem-hub-conn",
       "type": "String"
     },
-    "onpremVnetName": {
+    "virtualNetworks_onprem_vnet_name": {
       "defaultValue": "onprem-vnet",
       "type": "String"
     },
-    "azDnsNicName": {
+    "networkInterfaces_az_dns_nic_name": {
       "defaultValue": "az-dns-nic",
       "type": "String"
     },
-    "onpremDnsVmName": {
+    "virtualMachines_onprem_dns_vm_name": {
       "defaultValue": "onprem-dns-vm",
       "type": "String"
     },
-    "hubBastionHostName": {
+    "bastionHosts_hub_bastion_host_name": {
       "defaultValue": "hub-bastion-host",
       "type": "String"
     },
-    "azMgmtNicName": {
+    "networkInterfaces_az_mgmt_nic_name": {
       "defaultValue": "az-mgmt-nic",
       "type": "String"
     },
-    "onpremMgmtVmName": {
+    "virtualMachines_onprem_mgmt_vm_name": {
       "defaultValue": "onprem-mgmt-vm",
       "type": "String"
     },
-    "onpremBastionHostName": {
+    "bastionHosts_onprem_bastion_host_name": {
       "defaultValue": "onprem-bastion-host",
       "type": "String"
     },
-    "onpremDnsNicName": {
+    "networkInterfaces_onprem_dns_nic_name": {
       "defaultValue": "onprem-dns-nic",
       "type": "String"
     },
-    "onpremMgmtNicName": {
+    "networkInterfaces_onprem_mgmt_nic_name": {
       "defaultValue": "onprem-mgmt-nic",
       "type": "String"
     },
-    "hubBastionPipName": {
+    "publicIPAddresses_hub_bastion_pip_name": {
       "defaultValue": "hub-bastion-pip",
       "type": "String"
     },
     "storageAccounts_stgmicrohackfiles_name": {
-      "defaultValue": "stgazprivatelink",
+      "defaultValue": "stgazureprivatelink",
       "type": "String"
     },
-    "onpremBastionPipName": {
+    "publicIPAddresses_onprem_bastion_pip_name": {
       "defaultValue": "onprem-bastion-pip",
       "type": "String"
     },
-    "hubVpnGatewayPipName": {
+    "publicIPAddresses_hub_vpn_gateway_pip_name": {
       "defaultValue": "hub-vpn-gateway-pip",
       "type": "String"
     },
-    "hubVpnGatewayName": {
+    "virtualNetworkGateways_hub_vpn_gateway_name": {
       "defaultValue": "hub-vpn-gateway",
       "type": "String"
     },
-    "onpremVpnGatewayPipName": {
+    "publicIPAddresses_onprem_vpn_gateway_pip_name": {
       "defaultValue": "onprem-vpn-gateway-pip",
       "type": "String"
     },
-    "onpremVpnGatewayName": {
+    "virtualNetworkGateways_onprem_vpn_gateway_name": {
       "defaultValue": "onprem-vpn-gateway",
       "type": "String"
     },
@@ -112,10 +112,10 @@
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('hubBastionPipName')]",
+      "name": "[parameters('publicIPAddresses_hub_bastion_pip_name')]",
       "location": "westeurope",
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "hub",
         "microhack": "privatelink-dns"
       },
@@ -135,7 +135,7 @@
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('hubVpnGatewayPipName')]",
+      "name": "[parameters('publicIPAddresses_hub_vpn_gateway_pip_name')]",
       "location": "westeurope",
       "sku": {
         "name": "Basic",
@@ -152,10 +152,10 @@
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('onpremBastionPipName')]",
+      "name": "[parameters('publicIPAddresses_onprem_bastion_pip_name')]",
       "location": "westeurope",
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "onprem",
         "microhack": "privatelink-dns"
       },
@@ -175,7 +175,7 @@
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('onpremVpnGatewayPipName')]",
+      "name": "[parameters('publicIPAddresses_onprem_vpn_gateway_pip_name')]",
       "location": "westeurope",
       "sku": {
         "name": "Basic",
@@ -193,10 +193,10 @@
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('onpremVnetName')]",
+      "name": "[parameters('virtualNetworks_onprem_vnet_name')]",
       "location": "westeurope",
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "onprem",
         "microhack": "privatelink-dns"
       },
@@ -291,13 +291,13 @@
     {
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2020-12-01",
-      "name": "[parameters('azDnsVmName')]",
+      "name": "[parameters('virtualMachines_az_dns_vm_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces', parameters('azDnsNicName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_az_dns_nic_name'))]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "hub-spoke",
         "microhack": "privatelink-dns"
       },
@@ -326,7 +326,7 @@
           "dataDisks": []
         },
         "osProfile": {
-          "computerName": "[parameters('azDnsVmName')]",
+          "computerName": "[parameters('virtualMachines_az_dns_vm_name')]",
           "adminUsername": "azureadmin",
           "adminPassword": "[parameters('adminPwd')]",
 
@@ -343,7 +343,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('azDnsNicName'))]",
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_az_dns_nic_name'))]",
               "properties": {
                 "primary": false
               }
@@ -355,13 +355,13 @@
     {
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2020-12-01",
-      "name": "[parameters('azMgmtVmName')]",
+      "name": "[parameters('virtualMachines_az_mgmt_vm_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces', parameters('azMgmtNicName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_az_mgmt_nic_name'))]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "spoke",
         "microhack": "privatelink-dns"
       },
@@ -390,7 +390,7 @@
           "dataDisks": []
         },
         "osProfile": {
-          "computerName": "[parameters('azMgmtVmName')]",
+          "computerName": "[parameters('virtualMachines_az_mgmt_vm_name')]",
           "adminUsername": "azureadmin",
           "adminPassword": "[parameters('adminPwd')]",
           "windowsConfiguration": {
@@ -406,7 +406,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('azMgmtNicName'))]",
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_az_mgmt_nic_name'))]",
               "properties": {
                 "primary": false
               }
@@ -418,13 +418,13 @@
     {
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2020-12-01",
-      "name": "[parameters('onpremDnsVmName')]",
+      "name": "[parameters('virtualMachines_onprem_dns_vm_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces', parameters('onpremDnsNicName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_onprem_dns_nic_name'))]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "onprem",
         "microhack": "privatelink-dns"
       },
@@ -453,7 +453,7 @@
           "dataDisks": []
         },
         "osProfile": {
-          "computerName": "[parameters('onpremDnsVmName')]",
+          "computerName": "[parameters('virtualMachines_onprem_dns_vm_name')]",
           "adminUsername": "azureadmin",
           "adminPassword": "[parameters('adminPwd')]",
 
@@ -470,7 +470,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('onpremDnsNicName'))]",
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_onprem_dns_nic_name'))]",
               "properties": {
                 "primary": false
               }
@@ -482,13 +482,13 @@
     {
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2020-12-01",
-      "name": "[parameters('onpremMgmtVmName')]",
+      "name": "[parameters('virtualMachines_onprem_mgmt_vm_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces', parameters('onpremMgmtNicName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_onprem_mgmt_nic_name'))]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "onprem",
         "microhack": "privatelink-dns"
       },
@@ -517,7 +517,7 @@
           "dataDisks": []
         },
         "osProfile": {
-          "computerName": "[parameters('onpremMgmtVmName')]",
+          "computerName": "[parameters('virtualMachines_onprem_mgmt_vm_name')]",
           "adminUsername": "azureadmin",
           "adminPassword": "[parameters('adminPwd')]",
           "windowsConfiguration": {
@@ -533,7 +533,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('onpremMgmtNicName'))]",
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_onprem_mgmt_nic_name'))]",
               "properties": {
                 "primary": false
               }
@@ -545,10 +545,10 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2020-12-01",
-      "name": "[concat(parameters('azDnsVmName'), '/install-dns-az-dc')]",
+      "name": "[concat(parameters('virtualMachines_az_dns_vm_name'), '/install-dns-az-dc')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', parameters('azDnsVmName'))]"
+        "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_az_dns_vm_name'))]"
       ],
       "properties": {
         "autoUpgradeMinorVersion": false,
@@ -564,10 +564,10 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2020-12-01",
-      "name": "[concat(parameters('onpremDnsVmName'), '/install-dns-onprem-dc')]",
+      "name": "[concat(parameters('virtualMachines_onprem_dns_vm_name'), '/install-dns-onprem-dc')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', parameters('onpremDnsVmName'))]"
+        "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_onprem_dns_vm_name'))]"
       ],
       "properties": {
         "autoUpgradeMinorVersion": false,
@@ -583,25 +583,25 @@
     {
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('azDnsNicName')]",
+      "name": "[parameters('networkInterfaces_az_dns_nic_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hubvnetName'), 'DNSSubnet')]"
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_hub_vnet_name'), 'DNSSubnet')]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "hub-spoke",
         "microhack": "privatelink-dns"
       },
       "properties": {
         "ipConfigurations": [
           {
-            "name": "[parameters('azDnsNicName')]",
+            "name": "[parameters('networkInterfaces_az_dns_nic_name')]",
             "properties": {
               "privateIPAddress": "10.0.0.4",
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hubvnetName'), 'DNSSubnet')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_hub_vnet_name'), 'DNSSubnet')]"
               },
               "primary": true,
               "privateIPAddressVersion": "IPv4"
@@ -618,25 +618,25 @@
     {
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('azMgmtNicName')]",
+      "name": "[parameters('networkInterfaces_az_mgmt_nic_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('spokeVnetName'), 'InfrastructureSubnet')]"
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_spoke_vnet_name'), 'InfrastructureSubnet')]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "spoke",
         "microhack": "privatelink-dns"
       },
       "properties": {
         "ipConfigurations": [
           {
-            "name": "[parameters('azMgmtNicName')]",
+            "name": "[parameters('networkInterfaces_az_mgmt_nic_name')]",
             "properties": {
               "privateIPAddress": "10.1.0.4",
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('spokeVnetName'), 'InfrastructureSubnet')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_spoke_vnet_name'), 'InfrastructureSubnet')]"
               },
               "primary": true,
               "privateIPAddressVersion": "IPv4"
@@ -653,25 +653,25 @@
     {
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('onpremDnsNicName')]",
+      "name": "[parameters('networkInterfaces_onprem_dns_nic_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('onpremVnetName'), 'InfrastructureSubnet')]"
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_onprem_vnet_name'), 'InfrastructureSubnet')]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "onprem",
         "microhack": "privatelink-dns"
       },
       "properties": {
         "ipConfigurations": [
           {
-            "name": "[parameters('onpremDnsNicName')]",
+            "name": "[parameters('networkInterfaces_onprem_dns_nic_name')]",
             "properties": {
               "privateIPAddress": "192.168.0.4",
               "privateIPAllocationMethod": "Static",
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('onpremVnetName'), 'InfrastructureSubnet')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_onprem_vnet_name'), 'InfrastructureSubnet')]"
               },
               "primary": true,
               "privateIPAddressVersion": "IPv4"
@@ -688,25 +688,25 @@
     {
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('onpremMgmtNicName')]",
+      "name": "[parameters('networkInterfaces_onprem_mgmt_nic_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('onpremVnetName'), 'InfrastructureSubnet')]"
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_onprem_vnet_name'), 'InfrastructureSubnet')]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "onprem",
         "microhack": "privatelink-dns"
       },
       "properties": {
         "ipConfigurations": [
           {
-            "name": "[parameters('onpremMgmtNicName')]",
+            "name": "[parameters('networkInterfaces_onprem_mgmt_nic_name')]",
             "properties": {
               "privateIPAddress": "192.168.0.5",
               "privateIPAllocationMethod": "Static",
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('onpremVnetName'), 'InfrastructureSubnet')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_onprem_vnet_name'), 'InfrastructureSubnet')]"
               },
               "primary": true,
               "privateIPAddressVersion": "IPv4"
@@ -723,11 +723,11 @@
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('hubvnetName')]",
+      "name": "[parameters('virtualNetworks_hub_vnet_name')]",
       "location": "westeurope",
       "dependsOn": [],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "hub-spoke",
         "microhack": "privatelink-dns"
       },
@@ -786,7 +786,7 @@
             "properties": {
               "peeringState": "Connected",
               "remoteVirtualNetwork": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('spokeVnetName'))]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_spoke_vnet_name'))]"
               },
               "allowVirtualNetworkAccess": true,
               "allowForwardedTraffic": true,
@@ -804,13 +804,13 @@
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('spokeVnetName')]",
+      "name": "[parameters('virtualNetworks_spoke_vnet_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubvnetName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_hub_vnet_name'))]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "spoke",
         "microhack": "privatelink-dns"
       },
@@ -849,7 +849,7 @@
             "properties": {
               "peeringState": "Connected",
               "remoteVirtualNetwork": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubvnetName'))]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_hub_vnet_name'))]"
               },
               "allowVirtualNetworkAccess": true,
               "allowForwardedTraffic": true,
@@ -867,9 +867,9 @@
     {
       "type": "Microsoft.Network/virtualNetworks/subnets",
       "apiVersion": "2020-11-01",
-      "name": "[concat(parameters('hubvnetName'), '/AzureBastionSubnet')]",
+      "name": "[concat(parameters('virtualNetworks_hub_vnet_name'), '/AzureBastionSubnet')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubvnetName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_hub_vnet_name'))]"
       ],
       "properties": {
         "addressPrefix": "10.0.1.0/27",
@@ -882,9 +882,9 @@
     {
       "type": "Microsoft.Network/virtualNetworks/subnets",
       "apiVersion": "2020-11-01",
-      "name": "[concat(parameters('onpremVnetName'), '/AzureBastionSubnet')]",
+      "name": "[concat(parameters('virtualNetworks_onprem_vnet_name'), '/AzureBastionSubnet')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('onpremVnetName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_onprem_vnet_name'))]"
       ],
       "properties": {
         "addressPrefix": "192.168.1.0/27",
@@ -898,9 +898,9 @@
     {
       "type": "Microsoft.Network/virtualNetworks/subnets",
       "apiVersion": "2020-11-01",
-      "name": "[concat(parameters('hubvnetName'), '/DNSSubnet')]",
+      "name": "[concat(parameters('virtualNetworks_hub_vnet_name'), '/DNSSubnet')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubvnetName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_hub_vnet_name'))]"
       ],
       "properties": {
         "addressPrefix": "10.0.0.0/24",
@@ -913,9 +913,9 @@
     {
       "type": "Microsoft.Network/virtualNetworks/subnets",
       "apiVersion": "2020-11-01",
-      "name": "[concat(parameters('hubvnetName'), '/GatewaySubnet')]",
+      "name": "[concat(parameters('virtualNetworks_hub_vnet_name'), '/GatewaySubnet')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubvnetName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_hub_vnet_name'))]"
       ],
       "properties": {
         "addressPrefix": "10.0.255.224/27",
@@ -928,9 +928,9 @@
     {
       "type": "Microsoft.Network/virtualNetworks/subnets",
       "apiVersion": "2020-11-01",
-      "name": "[concat(parameters('onpremVnetName'), '/GatewaySubnet')]",
+      "name": "[concat(parameters('virtualNetworks_onprem_vnet_name'), '/GatewaySubnet')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('onpremVnetName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_onprem_vnet_name'))]"
       ],
       "properties": {
         "addressPrefix": "192.168.255.224/27",
@@ -943,9 +943,9 @@
     {
       "type": "Microsoft.Network/virtualNetworks/subnets",
       "apiVersion": "2020-11-01",
-      "name": "[concat(parameters('onpremVnetName'), '/InfrastructureSubnet')]",
+      "name": "[concat(parameters('virtualNetworks_onprem_vnet_name'), '/InfrastructureSubnet')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('onpremVnetName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_onprem_vnet_name'))]"
       ],
       "properties": {
         "addressPrefix": "192.168.0.0/24",
@@ -958,9 +958,9 @@
     {
       "type": "Microsoft.Network/virtualNetworks/subnets",
       "apiVersion": "2020-11-01",
-      "name": "[concat(parameters('spokeVnetName'), '/InfrastructureSubnet')]",
+      "name": "[concat(parameters('virtualNetworks_spoke_vnet_name'), '/InfrastructureSubnet')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('spokeVnetName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_spoke_vnet_name'))]"
       ],
       "properties": {
         "addressPrefix": "10.1.0.0/24",
@@ -973,9 +973,9 @@
     {
       "type": "Microsoft.Network/virtualNetworks/subnets",
       "apiVersion": "2020-11-01",
-      "name": "[concat(parameters('hubvnetName'), '/PrivateEndpointSubnet')]",
+      "name": "[concat(parameters('virtualNetworks_hub_vnet_name'), '/PrivateEndpointSubnet')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubvnetName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_hub_vnet_name'))]"
       ],
       "properties": {
         "addressPrefix": "10.0.2.0/24",
@@ -988,14 +988,14 @@
     {
       "type": "Microsoft.Network/bastionHosts",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('hubBastionHostName')]",
+      "name": "[parameters('bastionHosts_hub_bastion_host_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('hubBastionPipName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hubvnetName'), 'AzureBastionSubnet')]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_hub_bastion_pip_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_hub_vnet_name'), 'AzureBastionSubnet')]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "hub",
         "microhack": "privatelink-dns"
       },
@@ -1003,16 +1003,17 @@
         "name": "Basic"
       },
       "properties": {
+        "dnsName": "bst-7b917f73-c65c-4ca8-9e5e-1f548207c6a6.bastion.azure.com",
         "ipConfigurations": [
           {
-            "name": "[parameters('hubBastionHostName')]",
+            "name": "[parameters('bastionHosts_hub_bastion_host_name')]",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('hubBastionPipName'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_hub_bastion_pip_name'))]"
               },
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hubvnetName'), 'AzureBastionSubnet')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_hub_vnet_name'), 'AzureBastionSubnet')]"
               }
             }
           }
@@ -1022,14 +1023,14 @@
     {
       "type": "Microsoft.Network/bastionHosts",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('onpremBastionHostName')]",
+      "name": "[parameters('bastionHosts_onprem_bastion_host_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('onpremBastionPipName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('onpremVnetName'), 'AzureBastionSubnet')]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_onprem_bastion_pip_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_onprem_vnet_name'), 'AzureBastionSubnet')]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "onprem",
         "microhack": "privatelink-dns"
       },
@@ -1037,16 +1038,17 @@
         "name": "Basic"
       },
       "properties": {
+        "dnsName": "bst-37c5a080-3d46-4810-9269-683a2491a3b6.bastion.azure.com",
         "ipConfigurations": [
           {
-            "name": "[parameters('onpremBastionHostName')]",
+            "name": "[parameters('bastionHosts_onprem_bastion_host_name')]",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('onpremBastionPipName'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_onprem_bastion_pip_name'))]"
               },
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('onpremVnetName'), 'AzureBastionSubnet')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_onprem_vnet_name'), 'AzureBastionSubnet')]"
               }
             }
           }
@@ -1057,18 +1059,18 @@
     {
       "type": "Microsoft.Network/connections",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('hub-onprem-connectionName')]",
+      "name": "[parameters('connections_hub_onprem_conn_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('hubVpnGatewayName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('onpremVpnGatewayName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_hub_vpn_gateway_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_onprem_vpn_gateway_name'))]"
       ],
       "properties": {
         "virtualNetworkGateway1": {
-          "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('hubVpnGatewayName'))]"
+          "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_hub_vpn_gateway_name'))]"
         },
         "virtualNetworkGateway2": {
-          "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('onpremVpnGatewayName'))]"
+          "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_onprem_vpn_gateway_name'))]"
         },
         "connectionType": "Vnet2Vnet",
         "connectionProtocol": "IKEv2",
@@ -1087,23 +1089,23 @@
     {
       "type": "Microsoft.Network/connections",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('onprem-hub-connectionName')]",
+      "name": "[parameters('connections_onprem_hub_conn_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('onpremVpnGatewayName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('hubVpnGatewayName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_onprem_vpn_gateway_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_hub_vpn_gateway_name'))]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "hub-spoke",
         "microhack": "privatelink-dns"
       },
       "properties": {
         "virtualNetworkGateway1": {
-          "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('onpremVpnGatewayName'))]"
+          "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_onprem_vpn_gateway_name'))]"
         },
         "virtualNetworkGateway2": {
-          "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('hubVpnGatewayName'))]"
+          "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_hub_vpn_gateway_name'))]"
         },
         "connectionType": "Vnet2Vnet",
         "connectionProtocol": "IKEv2",
@@ -1122,14 +1124,14 @@
     {
       "type": "Microsoft.Network/virtualNetworkGateways",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('hubVpnGatewayName')]",
+      "name": "[parameters('virtualNetworkGateways_hub_vpn_gateway_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('hubVpnGatewayPipName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hubvnetName'), 'GatewaySubnet')]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_hub_vpn_gateway_pip_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_hub_vnet_name'), 'GatewaySubnet')]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "hub-spoke",
         "microhack": "privatelink-dns"
       },
@@ -1141,10 +1143,10 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('hubVpnGatewayPipName'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_hub_vpn_gateway_pip_name'))]"
               },
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hubvnetName'), 'GatewaySubnet')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_hub_vnet_name'), 'GatewaySubnet')]"
               }
             }
           }
@@ -1170,7 +1172,7 @@
           "peerWeight": 0,
           "bgpPeeringAddresses": [
             {
-              "ipconfigurationId": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', parameters('hubVpnGatewayName')), '/ipConfigurations/vnetGatewayConfig')]",
+              "ipconfigurationId": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_hub_vpn_gateway_name')), '/ipConfigurations/vnetGatewayConfig')]",
               "customBgpIpAddresses": []
             }
           ]
@@ -1181,14 +1183,14 @@
     {
       "type": "Microsoft.Network/virtualNetworkGateways",
       "apiVersion": "2020-11-01",
-      "name": "[parameters('onpremVpnGatewayName')]",
+      "name": "[parameters('virtualNetworkGateways_onprem_vpn_gateway_name')]",
       "location": "westeurope",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('onpremVpnGatewayPipName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('onpremVnetName'), 'GatewaySubnet')]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_onprem_vpn_gateway_pip_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_onprem_vnet_name'), 'GatewaySubnet')]"
       ],
       "tags": {
-        "deployment": "bicep",
+        "deployment": "terraform",
         "environment": "onprem",
         "microhack": "privatelink-dns"
       },
@@ -1200,10 +1202,10 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('onpremVpnGatewayPipName'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_onprem_vpn_gateway_pip_name'))]"
               },
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('onpremVnetName'), 'GatewaySubnet')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_onprem_vnet_name'), 'GatewaySubnet')]"
               }
             }
           }
@@ -1229,7 +1231,7 @@
           "peerWeight": 0,
           "bgpPeeringAddresses": [
             {
-              "ipconfigurationId": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', parameters('onpremVpnGatewayName')), '/ipConfigurations/vnetGatewayConfig')]",
+              "ipconfigurationId": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_onprem_vpn_gateway_name')), '/ipConfigurations/vnetGatewayConfig')]",
               "customBgpIpAddresses": []
             }
           ]
@@ -1240,15 +1242,15 @@
     {
       "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
       "apiVersion": "2020-11-01",
-      "name": "[concat(parameters('hubvnetName'), '/hub-spoke-peer')]",
+      "name": "[concat(parameters('virtualNetworks_hub_vnet_name'), '/hub-spoke-peer')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubvnetName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('spokeVnetName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_hub_vnet_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_spoke_vnet_name'))]"
       ],
       "properties": {
         "peeringState": "Connected",
         "remoteVirtualNetwork": {
-          "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('spokeVnetName'))]"
+          "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_spoke_vnet_name'))]"
         },
         "allowVirtualNetworkAccess": true,
         "allowForwardedTraffic": true,
@@ -1262,17 +1264,15 @@
     {
       "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
       "apiVersion": "2020-11-01",
-      "name": "[concat(parameters('spokeVnetName'), '/spoke-hub-peer')]",
+      "name": "[concat(parameters('virtualNetworks_spoke_vnet_name'), '/spoke-hub-peer')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('spokeVnetName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubvnetName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('hubVpnGatewayName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_spoke_vnet_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_hub_vnet_name'))]"
       ],
-
       "properties": {
         "peeringState": "Connected",
         "remoteVirtualNetwork": {
-          "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubvnetName'))]"
+          "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_hub_vnet_name'))]"
         },
         "allowVirtualNetworkAccess": true,
         "allowForwardedTraffic": true,

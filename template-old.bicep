@@ -1,33 +1,25 @@
-param virtualNetworks_hub_vnet_name string = 'hub-vnet'
+param vNetHubName string = 'hub-vnet'
 param virtualMachines_az_dns_vm_name string = 'az-dns-vm'
 param virtualMachines_az_mgmt_vm_name string = 'az-mgmt-vm'
-param virtualNetworks_spoke_vnet_name string = 'spoke-vnet'
-param connections_hub_onprem_conn_name string = 'hub-onprem-conn'
-param connections_onprem_hub_conn_name string = 'onprem-hub-conn'
-param virtualNetworks_onprem_vnet_name string = 'onprem-vnet'
-param networkInterfaces_az_dns_nic_name string = 'az-dns-nic'
-param virtualMachines_onprem_dns_vm_name string = 'onprem-dns-vm'
+param vNetSpokeName string = 'spoke-vnet'
+param vNetOnPremName string = 'onprem-vnet'
+param nicNameDns string = 'az-dns-nic'
+param vmNameOnPremDns string = 'onprem-dns-vm'
 param bastionHosts_hub_bastion_host_name string = 'hub-bastion-host'
-param networkInterfaces_az_mgmt_nic_name string = 'az-mgmt-nic'
-param virtualMachines_onprem_mgmt_vm_name string = 'onprem-mgmt-vm'
+param nicNameMgmt string = 'az-mgmt-nic'
+param vmNameOnPremMgmt string = 'onprem-mgmt-vm'
 param bastionHosts_onprem_bastion_host_name string = 'onprem-bastion-host'
 param networkInterfaces_onprem_dns_nic_name string = 'onprem-dns-nic'
 param networkInterfaces_onprem_mgmt_nic_name string = 'onprem-mgmt-nic'
 param publicIPAddresses_hub_bastion_pip_name string = 'hub-bastion-pip'
-param storageAccounts_stgmicrohackfiles_name string = 'stgazprivatelink'
+param storageAccountName string = 'stgcstechtalkfiles'
 param publicIPAddresses_onprem_bastion_pip_name string = 'onprem-bastion-pip'
 param publicIPAddresses_hub_vpn_gateway_pip_name string = 'hub-vpn-gateway-pip'
 param virtualNetworkGateways_hub_vpn_gateway_name string = 'hub-vpn-gateway'
-param publicIPAddresses_onprem_vpn_gateway_pip_name string = 'onprem-vpn-gateway-pip'
-param virtualNetworkGateways_onprem_vpn_gateway_name string = 'onprem-vpn-gateway'
-
-@description('description')
+param onprem_vpn_gateway_pip_name string = 'onprem-vpn-gateway-pip'
+param vpn_gateway_name string = 'onprem-vpn-gateway'
 @secure()
-param adminPwd string
-
-@description('description')
-@secure()
-param preSharedKey string
+param adminPassword string
 
 resource publicIPAddresses_hub_bastion_pip_name_resource 'Microsoft.Network/publicIPAddresses@2020-11-01' = {
   name: publicIPAddresses_hub_bastion_pip_name
@@ -35,7 +27,7 @@ resource publicIPAddresses_hub_bastion_pip_name_resource 'Microsoft.Network/publ
   tags: {
     deployment: 'bicep'
     environment: 'hub'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   sku: {
     name: 'Standard'
@@ -47,9 +39,8 @@ resource publicIPAddresses_hub_bastion_pip_name_resource 'Microsoft.Network/publ
     '3'
   ]
   properties: {
-    ipAddress: '20.82.54.94'
     publicIPAddressVersion: 'IPv4'
-    publicIPAllocationMethod: 'Static'
+    publicIPAllocationMethod: 'Dynamic'
     idleTimeoutInMinutes: 4
     ipTags: []
   }
@@ -63,7 +54,6 @@ resource publicIPAddresses_hub_vpn_gateway_pip_name_resource 'Microsoft.Network/
     tier: 'Regional'
   }
   properties: {
-    ipAddress: '20.93.153.49'
     publicIPAddressVersion: 'IPv4'
     publicIPAllocationMethod: 'Dynamic'
     idleTimeoutInMinutes: 4
@@ -77,7 +67,7 @@ resource publicIPAddresses_onprem_bastion_pip_name_resource 'Microsoft.Network/p
   tags: {
     deployment: 'bicep'
     environment: 'onprem'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   sku: {
     name: 'Standard'
@@ -89,23 +79,6 @@ resource publicIPAddresses_onprem_bastion_pip_name_resource 'Microsoft.Network/p
     '3'
   ]
   properties: {
-    ipAddress: '20.82.52.123'
-    publicIPAddressVersion: 'IPv4'
-    publicIPAllocationMethod: 'Static'
-    idleTimeoutInMinutes: 4
-    ipTags: []
-  }
-}
-
-resource publicIPAddresses_onprem_vpn_gateway_pip_name_resource 'Microsoft.Network/publicIPAddresses@2020-11-01' = {
-  name: publicIPAddresses_onprem_vpn_gateway_pip_name
-  location: 'westeurope'
-  sku: {
-    name: 'Basic'
-    tier: 'Regional'
-  }
-  properties: {
-    ipAddress: '20.86.163.117'
     publicIPAddressVersion: 'IPv4'
     publicIPAllocationMethod: 'Dynamic'
     idleTimeoutInMinutes: 4
@@ -113,13 +86,28 @@ resource publicIPAddresses_onprem_vpn_gateway_pip_name_resource 'Microsoft.Netwo
   }
 }
 
-resource virtualNetworks_onprem_vnet_name_resource 'Microsoft.Network/virtualNetworks@2020-11-01' = {
-  name: virtualNetworks_onprem_vnet_name
+resource onprem_vpn_gateway_pip_name_resource 'Microsoft.Network/publicIPAddresses@2020-11-01' = {
+  name: onprem_vpn_gateway_pip_name
+  location: 'westeurope'
+  sku: {
+    name: 'Basic'
+    tier: 'Regional'
+  }
+  properties: {
+    publicIPAddressVersion: 'IPv4'
+    publicIPAllocationMethod: 'Dynamic'
+    idleTimeoutInMinutes: 4
+    ipTags: []
+  }
+}
+
+resource vNetOnPremName_resource 'Microsoft.Network/virtualNetworks@2020-11-01' = {
+  name: vNetOnPremName
   location: 'westeurope'
   tags: {
     deployment: 'bicep'
     environment: 'onprem'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     addressSpace: {
@@ -169,8 +157,8 @@ resource virtualNetworks_onprem_vnet_name_resource 'Microsoft.Network/virtualNet
   }
 }
 
-resource storageAccounts_stgmicrohackfiles_name_resource 'Microsoft.Storage/storageAccounts@2021-04-01' = {
-  name: storageAccounts_stgmicrohackfiles_name
+resource storageAccountName_resource 'Microsoft.Storage/storageAccounts@2021-04-01' = {
+  name: storageAccountName
   location: 'westeurope'
   sku: {
     name: 'Premium_LRS'
@@ -219,7 +207,7 @@ resource virtualMachines_az_dns_vm_name_resource 'Microsoft.Compute/virtualMachi
   tags: {
     deployment: 'bicep'
     environment: 'hub-spoke'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     hardwareProfile: {
@@ -240,15 +228,15 @@ resource virtualMachines_az_dns_vm_name_resource 'Microsoft.Compute/virtualMachi
         writeAcceleratorEnabled: false
         managedDisk: {
           storageAccountType: 'Standard_LRS'
-        }
+                }
         diskSizeGB: 127
       }
       dataDisks: []
     }
     osProfile: {
       computerName: virtualMachines_az_dns_vm_name
-      adminUsername: 'azureadmin'
-      adminPassword: adminPwd
+      adminUsername: 'AzureAdmin'
+      adminPassword:adminPassword
       windowsConfiguration: {
         provisionVMAgent: true
         enableAutomaticUpdates: false
@@ -262,7 +250,7 @@ resource virtualMachines_az_dns_vm_name_resource 'Microsoft.Compute/virtualMachi
     networkProfile: {
       networkInterfaces: [
         {
-          id: networkInterfaces_az_dns_nic_name_resource.id
+          id: nicNameDns_resource.id
           properties: {
             primary: false
           }
@@ -278,7 +266,7 @@ resource virtualMachines_az_mgmt_vm_name_resource 'Microsoft.Compute/virtualMach
   tags: {
     deployment: 'bicep'
     environment: 'spoke'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     hardwareProfile: {
@@ -306,8 +294,9 @@ resource virtualMachines_az_mgmt_vm_name_resource 'Microsoft.Compute/virtualMach
     }
     osProfile: {
       computerName: virtualMachines_az_mgmt_vm_name
-      adminUsername: 'azureadmin'
-      adminPassword: adminPwd
+      adminUsername: 'AzureAdmin'
+      adminPassword:adminPassword
+
       windowsConfiguration: {
         provisionVMAgent: true
         enableAutomaticUpdates: false
@@ -321,7 +310,7 @@ resource virtualMachines_az_mgmt_vm_name_resource 'Microsoft.Compute/virtualMach
     networkProfile: {
       networkInterfaces: [
         {
-          id: networkInterfaces_az_mgmt_nic_name_resource.id
+          id: nicNameMgmt_resource.id
           properties: {
             primary: false
           }
@@ -331,13 +320,13 @@ resource virtualMachines_az_mgmt_vm_name_resource 'Microsoft.Compute/virtualMach
   }
 }
 
-resource virtualMachines_onprem_dns_vm_name_resource 'Microsoft.Compute/virtualMachines@2020-12-01' = {
-  name: virtualMachines_onprem_dns_vm_name
+resource vmNameOnPremDns_resource 'Microsoft.Compute/virtualMachines@2020-12-01' = {
+  name: vmNameOnPremDns
   location: 'westeurope'
   tags: {
     deployment: 'bicep'
     environment: 'onprem'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     hardwareProfile: {
@@ -364,9 +353,10 @@ resource virtualMachines_onprem_dns_vm_name_resource 'Microsoft.Compute/virtualM
       dataDisks: []
     }
     osProfile: {
-      computerName: virtualMachines_onprem_dns_vm_name
-      adminUsername: 'azureadmin'
-      adminPassword: adminPwd
+      computerName: vmNameOnPremDns
+      adminUsername: 'AzureAdmin'
+      adminPassword:adminPassword
+
       windowsConfiguration: {
         provisionVMAgent: true
         enableAutomaticUpdates: false
@@ -390,13 +380,13 @@ resource virtualMachines_onprem_dns_vm_name_resource 'Microsoft.Compute/virtualM
   }
 }
 
-resource virtualMachines_onprem_mgmt_vm_name_resource 'Microsoft.Compute/virtualMachines@2020-12-01' = {
-  name: virtualMachines_onprem_mgmt_vm_name
+resource vmNameOnPremMgmt_resource 'Microsoft.Compute/virtualMachines@2020-12-01' = {
+  name: vmNameOnPremMgmt
   location: 'westeurope'
   tags: {
     deployment: 'bicep'
     environment: 'onprem'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     hardwareProfile: {
@@ -423,9 +413,9 @@ resource virtualMachines_onprem_mgmt_vm_name_resource 'Microsoft.Compute/virtual
       dataDisks: []
     }
     osProfile: {
-      computerName: virtualMachines_onprem_mgmt_vm_name
-      adminUsername: 'azureadmin'
-      adminPassword: adminPwd
+      computerName: vmNameOnPremMgmt
+      adminUsername: 'AzureAdmin'
+      adminPassword:adminPassword
       windowsConfiguration: {
         provisionVMAgent: true
         enableAutomaticUpdates: false
@@ -464,8 +454,8 @@ resource virtualMachines_az_dns_vm_name_install_dns_az_dc 'Microsoft.Compute/vir
   }
 }
 
-resource virtualMachines_onprem_dns_vm_name_install_dns_onprem_dc 'Microsoft.Compute/virtualMachines/extensions@2020-12-01' = {
-  name: '${virtualMachines_onprem_dns_vm_name_resource.name}/install-dns-onprem-dc'
+resource vmNameOnPremDns_install_dns_onprem_dc 'Microsoft.Compute/virtualMachines/extensions@2020-12-01' = {
+  name: '${vmNameOnPremDns_resource.name}/install-dns-onprem-dc'
   location: 'westeurope'
   properties: {
     autoUpgradeMinorVersion: false
@@ -479,23 +469,23 @@ resource virtualMachines_onprem_dns_vm_name_install_dns_onprem_dc 'Microsoft.Com
   }
 }
 
-resource networkInterfaces_az_dns_nic_name_resource 'Microsoft.Network/networkInterfaces@2020-11-01' = {
-  name: networkInterfaces_az_dns_nic_name
+resource nicNameDns_resource 'Microsoft.Network/networkInterfaces@2020-11-01' = {
+  name: nicNameDns
   location: 'westeurope'
   tags: {
     deployment: 'bicep'
     environment: 'hub-spoke'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     ipConfigurations: [
       {
-        name: networkInterfaces_az_dns_nic_name
+        name: nicNameDns
         properties: {
           privateIPAddress: '10.0.0.4'
           privateIPAllocationMethod: 'Dynamic'
           subnet: {
-            id: virtualNetworks_hub_vnet_name_DNSSubnet.id
+            id: vNetHubName_DNSSubnet.id
           }
           primary: true
           privateIPAddressVersion: 'IPv4'
@@ -510,23 +500,23 @@ resource networkInterfaces_az_dns_nic_name_resource 'Microsoft.Network/networkIn
   }
 }
 
-resource networkInterfaces_az_mgmt_nic_name_resource 'Microsoft.Network/networkInterfaces@2020-11-01' = {
-  name: networkInterfaces_az_mgmt_nic_name
+resource nicNameMgmt_resource 'Microsoft.Network/networkInterfaces@2020-11-01' = {
+  name: nicNameMgmt
   location: 'westeurope'
   tags: {
     deployment: 'bicep'
     environment: 'spoke'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     ipConfigurations: [
       {
-        name: networkInterfaces_az_mgmt_nic_name
+        name: nicNameMgmt
         properties: {
           privateIPAddress: '10.1.0.4'
           privateIPAllocationMethod: 'Dynamic'
           subnet: {
-            id: virtualNetworks_spoke_vnet_name_InfrastructureSubnet.id
+            id: vNetSpokeName_InfrastructureSubnet.id
           }
           primary: true
           privateIPAddressVersion: 'IPv4'
@@ -547,7 +537,7 @@ resource networkInterfaces_onprem_dns_nic_name_resource 'Microsoft.Network/netwo
   tags: {
     deployment: 'bicep'
     environment: 'onprem'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     ipConfigurations: [
@@ -557,7 +547,7 @@ resource networkInterfaces_onprem_dns_nic_name_resource 'Microsoft.Network/netwo
           privateIPAddress: '192.168.0.4'
           privateIPAllocationMethod: 'Static'
           subnet: {
-            id: virtualNetworks_onprem_vnet_name_InfrastructureSubnet.id
+            id: vNetOnPremName_InfrastructureSubnet.id
           }
           primary: true
           privateIPAddressVersion: 'IPv4'
@@ -578,7 +568,7 @@ resource networkInterfaces_onprem_mgmt_nic_name_resource 'Microsoft.Network/netw
   tags: {
     deployment: 'bicep'
     environment: 'onprem'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     ipConfigurations: [
@@ -588,7 +578,7 @@ resource networkInterfaces_onprem_mgmt_nic_name_resource 'Microsoft.Network/netw
           privateIPAddress: '192.168.0.5'
           privateIPAllocationMethod: 'Static'
           subnet: {
-            id: virtualNetworks_onprem_vnet_name_InfrastructureSubnet.id
+            id: vNetOnPremName_InfrastructureSubnet.id
           }
           primary: true
           privateIPAddressVersion: 'IPv4'
@@ -603,13 +593,13 @@ resource networkInterfaces_onprem_mgmt_nic_name_resource 'Microsoft.Network/netw
   }
 }
 
-resource virtualNetworks_hub_vnet_name_resource 'Microsoft.Network/virtualNetworks@2020-11-01' = {
-  name: virtualNetworks_hub_vnet_name
+resource vNetHubName_resource 'Microsoft.Network/virtualNetworks@2020-11-01' = {
+  name: vNetHubName
   location: 'westeurope'
   tags: {
     deployment: 'bicep'
     environment: 'hub-spoke'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     addressSpace: {
@@ -662,38 +652,18 @@ resource virtualNetworks_hub_vnet_name_resource 'Microsoft.Network/virtualNetwor
         }
       }
     ]
-    virtualNetworkPeerings: [
-      {
-        name: 'hub-spoke-peer'
-        properties: {
-          peeringState: 'Connected'
-          remoteVirtualNetwork: {
-            id: virtualNetworks_spoke_vnet_name_resource.id
-          }
-          allowVirtualNetworkAccess: true
-          allowForwardedTraffic: true
-          allowGatewayTransit: true
-          useRemoteGateways: false
-          remoteAddressSpace: {
-            addressPrefixes: [
-              '10.1.0.0/16'
-            ]
-          }
-        }
-      }
-    ]
     enableDdosProtection: false
   }
   dependsOn: []
 }
 
-resource virtualNetworks_spoke_vnet_name_resource 'Microsoft.Network/virtualNetworks@2020-11-01' = {
-  name: virtualNetworks_spoke_vnet_name
+resource vNetSpokeName_resource 'Microsoft.Network/virtualNetworks@2020-11-01' = {
+  name: vNetSpokeName
   location: 'westeurope'
   tags: {
     deployment: 'bicep'
     environment: 'spoke'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     addressSpace: {
@@ -714,16 +684,7 @@ resource virtualNetworks_spoke_vnet_name_resource 'Microsoft.Network/virtualNetw
           privateEndpointNetworkPolicies: 'Enabled'
           privateLinkServiceNetworkPolicies: 'Enabled'
         }
-      }
-      {
-        name: 'AzureBastionSubnet'
-        properties: {
-          addressPrefix: '10.1.1.0/27'
-          serviceEndpoints: []
-          delegations: []
-          privateEndpointNetworkPolicies: 'Enabled'
-          privateLinkServiceNetworkPolicies: 'Enabled'
-        }
+      
       }
     ]
     virtualNetworkPeerings: [
@@ -732,7 +693,7 @@ resource virtualNetworks_spoke_vnet_name_resource 'Microsoft.Network/virtualNetw
         properties: {
           peeringState: 'Connected'
           remoteVirtualNetwork: {
-            id: virtualNetworks_hub_vnet_name_resource.id
+            id: vNetHubName_resource.id
           }
           allowVirtualNetworkAccess: true
           allowForwardedTraffic: true
@@ -750,8 +711,8 @@ resource virtualNetworks_spoke_vnet_name_resource 'Microsoft.Network/virtualNetw
   }
 }
 
-resource virtualNetworks_hub_vnet_name_AzureBastionSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: '${virtualNetworks_hub_vnet_name_resource.name}/AzureBastionSubnet'
+resource vNetHubName_AzureBastionSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+  name: '${vNetHubName_resource.name}/AzureBastionSubnet'
   properties: {
     addressPrefix: '10.0.1.0/27'
     serviceEndpoints: []
@@ -761,8 +722,8 @@ resource virtualNetworks_hub_vnet_name_AzureBastionSubnet 'Microsoft.Network/vir
   }
 }
 
-resource virtualNetworks_onprem_vnet_name_AzureBastionSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: '${virtualNetworks_onprem_vnet_name_resource.name}/AzureBastionSubnet'
+resource vNetOnPremName_AzureBastionSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+  name: '${vNetOnPremName_resource.name}/AzureBastionSubnet'
   properties: {
     addressPrefix: '192.168.1.0/27'
     serviceEndpoints: []
@@ -772,8 +733,8 @@ resource virtualNetworks_onprem_vnet_name_AzureBastionSubnet 'Microsoft.Network/
   }
 }
 
-resource virtualNetworks_hub_vnet_name_DNSSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: '${virtualNetworks_hub_vnet_name_resource.name}/DNSSubnet'
+resource vNetHubName_DNSSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+  name: '${vNetHubName_resource.name}/DNSSubnet'
   properties: {
     addressPrefix: '10.0.0.0/24'
     serviceEndpoints: []
@@ -783,8 +744,8 @@ resource virtualNetworks_hub_vnet_name_DNSSubnet 'Microsoft.Network/virtualNetwo
   }
 }
 
-resource virtualNetworks_hub_vnet_name_GatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: '${virtualNetworks_hub_vnet_name_resource.name}/GatewaySubnet'
+resource vNetHubName_GatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+  name: '${vNetHubName_resource.name}/GatewaySubnet'
   properties: {
     addressPrefix: '10.0.255.224/27'
     serviceEndpoints: []
@@ -794,8 +755,8 @@ resource virtualNetworks_hub_vnet_name_GatewaySubnet 'Microsoft.Network/virtualN
   }
 }
 
-resource virtualNetworks_onprem_vnet_name_GatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: '${virtualNetworks_onprem_vnet_name_resource.name}/GatewaySubnet'
+resource vNetOnPremName_GatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+  name: '${vNetOnPremName_resource.name}/GatewaySubnet'
   properties: {
     addressPrefix: '192.168.255.224/27'
     serviceEndpoints: []
@@ -805,8 +766,8 @@ resource virtualNetworks_onprem_vnet_name_GatewaySubnet 'Microsoft.Network/virtu
   }
 }
 
-resource virtualNetworks_onprem_vnet_name_InfrastructureSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: '${virtualNetworks_onprem_vnet_name_resource.name}/InfrastructureSubnet'
+resource vNetOnPremName_InfrastructureSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+  name: '${vNetOnPremName_resource.name}/InfrastructureSubnet'
   properties: {
     addressPrefix: '192.168.0.0/24'
     serviceEndpoints: []
@@ -816,8 +777,8 @@ resource virtualNetworks_onprem_vnet_name_InfrastructureSubnet 'Microsoft.Networ
   }
 }
 
-resource virtualNetworks_spoke_vnet_name_InfrastructureSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: '${virtualNetworks_spoke_vnet_name_resource.name}/InfrastructureSubnet'
+resource vNetSpokeName_InfrastructureSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+  name: '${vNetSpokeName_resource.name}/InfrastructureSubnet'
   properties: {
     addressPrefix: '10.1.0.0/24'
     serviceEndpoints: []
@@ -827,15 +788,31 @@ resource virtualNetworks_spoke_vnet_name_InfrastructureSubnet 'Microsoft.Network
   }
 }
 
-resource virtualNetworks_hub_vnet_name_PrivateEndpointSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: '${virtualNetworks_hub_vnet_name_resource.name}/PrivateEndpointSubnet'
+resource storageAccountName_default 'Microsoft.Storage/storageAccounts/fileServices@2021-04-01' = {
+  name: '${storageAccountName_resource.name}/default'
   properties: {
-    addressPrefix: '10.0.2.0/24'
-    serviceEndpoints: []
-    delegations: []
-    privateEndpointNetworkPolicies: 'Enabled'
-    privateLinkServiceNetworkPolicies: 'Enabled'
+    protocolSettings: {
+      smb: {}
+    }
+    cors: {
+      corsRules: []
+    }
+    shareDeleteRetentionPolicy: {
+      enabled: false
+      days: 0
+    }
   }
+}
+resource storageAccountName_default_data 'Microsoft.Storage/storageAccounts/fileServices/shares@2021-04-01' = {
+  name: '${storageAccountName_default.name}/data'
+  properties: {
+    accessTier: 'Premium'
+    shareQuota: 1024
+    enabledProtocols: 'SMB'
+  }
+  dependsOn: [
+    storageAccountName_resource
+  ]
 }
 
 resource bastionHosts_hub_bastion_host_name_resource 'Microsoft.Network/bastionHosts@2020-11-01' = {
@@ -844,10 +821,7 @@ resource bastionHosts_hub_bastion_host_name_resource 'Microsoft.Network/bastionH
   tags: {
     deployment: 'bicep'
     environment: 'hub'
-    microhack: 'privatelink-dns'
-  }
-  sku: {
-    name: 'Basic'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     dnsName: 'bst-7b917f73-c65c-4ca8-9e5e-1f548207c6a6.bastion.azure.com'
@@ -860,7 +834,7 @@ resource bastionHosts_hub_bastion_host_name_resource 'Microsoft.Network/bastionH
             id: publicIPAddresses_hub_bastion_pip_name_resource.id
           }
           subnet: {
-            id: virtualNetworks_hub_vnet_name_AzureBastionSubnet.id
+            id: vNetHubName_AzureBastionSubnet.id
           }
         }
       }
@@ -874,10 +848,7 @@ resource bastionHosts_onprem_bastion_host_name_resource 'Microsoft.Network/basti
   tags: {
     deployment: 'bicep'
     environment: 'onprem'
-    microhack: 'privatelink-dns'
-  }
-  sku: {
-    name: 'Basic'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     dnsName: 'bst-37c5a080-3d46-4810-9269-683a2491a3b6.bastion.azure.com'
@@ -890,66 +861,11 @@ resource bastionHosts_onprem_bastion_host_name_resource 'Microsoft.Network/basti
             id: publicIPAddresses_onprem_bastion_pip_name_resource.id
           }
           subnet: {
-            id: virtualNetworks_onprem_vnet_name_AzureBastionSubnet.id
+            id: vNetOnPremName_AzureBastionSubnet.id
           }
         }
       }
     ]
-  }
-}
-
-resource connections_hub_onprem_conn_name_resource 'Microsoft.Network/connections@2020-11-01' = {
-  name: connections_hub_onprem_conn_name
-  location: 'westeurope'
-  properties: {
-    virtualNetworkGateway1: {
-      id: virtualNetworkGateways_hub_vpn_gateway_name_resource.id
-    }
-    virtualNetworkGateway2: {
-      id: virtualNetworkGateways_onprem_vpn_gateway_name_resource.id
-    }
-    connectionType: 'Vnet2Vnet'
-    connectionProtocol: 'IKEv2'
-    routingWeight: 1
-    enableBgp: false
-    useLocalAzureIpAddress: false
-    usePolicyBasedTrafficSelectors: false
-    ipsecPolicies: []
-    trafficSelectorPolicies: []
-    expressRouteGatewayBypass: false
-    dpdTimeoutSeconds: 0
-    connectionMode: 'Default'
-    sharedKey: preSharedKey
-  }
-}
-
-resource connections_onprem_hub_conn_name_resource 'Microsoft.Network/connections@2020-11-01' = {
-  name: connections_onprem_hub_conn_name
-  location: 'westeurope'
-  tags: {
-    deployment: 'bicep'
-    environment: 'hub-spoke'
-    microhack: 'privatelink-dns'
-  }
-  properties: {
-    virtualNetworkGateway1: {
-      id: virtualNetworkGateways_onprem_vpn_gateway_name_resource.id
-    }
-    virtualNetworkGateway2: {
-      id: virtualNetworkGateways_hub_vpn_gateway_name_resource.id
-    }
-    connectionType: 'Vnet2Vnet'
-    connectionProtocol: 'IKEv2'
-    routingWeight: 1
-    enableBgp: false
-    useLocalAzureIpAddress: false
-    usePolicyBasedTrafficSelectors: false
-    ipsecPolicies: []
-    trafficSelectorPolicies: []
-    expressRouteGatewayBypass: false
-    dpdTimeoutSeconds: 0
-    connectionMode: 'Default'
-    sharedKey: preSharedKey
   }
 }
 
@@ -959,7 +875,7 @@ resource virtualNetworkGateways_hub_vpn_gateway_name_resource 'Microsoft.Network
   tags: {
     deployment: 'bicep'
     environment: 'hub-spoke'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     enablePrivateIpAddress: false
@@ -972,7 +888,7 @@ resource virtualNetworkGateways_hub_vpn_gateway_name_resource 'Microsoft.Network
             id: publicIPAddresses_hub_vpn_gateway_pip_name_resource.id
           }
           subnet: {
-            id: virtualNetworks_hub_vnet_name_GatewaySubnet.id
+            id: vNetHubName_GatewaySubnet.id
           }
         }
       }
@@ -1001,7 +917,6 @@ resource virtualNetworkGateways_hub_vpn_gateway_name_resource 'Microsoft.Network
       peerWeight: 0
       bgpPeeringAddresses: [
         {
-          ipconfigurationId: '${virtualNetworkGateways_hub_vpn_gateway_name_resource.id}/ipConfigurations/vnetGatewayConfig'
           customBgpIpAddresses: []
         }
       ]
@@ -1010,13 +925,13 @@ resource virtualNetworkGateways_hub_vpn_gateway_name_resource 'Microsoft.Network
   }
 }
 
-resource virtualNetworkGateways_onprem_vpn_gateway_name_resource 'Microsoft.Network/virtualNetworkGateways@2020-11-01' = {
-  name: virtualNetworkGateways_onprem_vpn_gateway_name
+resource vpn_gateway_name_resource 'Microsoft.Network/virtualNetworkGateways@2020-11-01' = {
+  name: vpn_gateway_name
   location: 'westeurope'
   tags: {
     deployment: 'bicep'
     environment: 'onprem'
-    microhack: 'privatelink-dns'
+    cstechtalk: 'privatelink-dns'
   }
   properties: {
     enablePrivateIpAddress: false
@@ -1026,10 +941,10 @@ resource virtualNetworkGateways_onprem_vpn_gateway_name_resource 'Microsoft.Netw
         properties: {
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: {
-            id: publicIPAddresses_onprem_vpn_gateway_pip_name_resource.id
+            id: onprem_vpn_gateway_pip_name_resource.id
           }
           subnet: {
-            id: virtualNetworks_onprem_vnet_name_GatewaySubnet.id
+            id: vNetOnPremName_GatewaySubnet.id
           }
         }
       }
@@ -1058,61 +973,10 @@ resource virtualNetworkGateways_onprem_vpn_gateway_name_resource 'Microsoft.Netw
       peerWeight: 0
       bgpPeeringAddresses: [
         {
-          ipconfigurationId: '${virtualNetworkGateways_onprem_vpn_gateway_name_resource.id}/ipConfigurations/vnetGatewayConfig'
           customBgpIpAddresses: []
         }
       ]
     }
     vpnGatewayGeneration: 'Generation1'
   }
-}
-
-resource virtualNetworks_hub_vnet_name_hub_spoke_peer 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = {
-  name: '${virtualNetworks_hub_vnet_name_resource.name}/hub-spoke-peer'
-  properties: {
-    peeringState: 'Connected'
-    remoteVirtualNetwork: {
-      id: virtualNetworks_spoke_vnet_name_resource.id
-    }
-    allowVirtualNetworkAccess: true
-    allowForwardedTraffic: true
-    allowGatewayTransit: true
-    useRemoteGateways: false
-    remoteAddressSpace: {
-      addressPrefixes: [
-        '10.1.0.0/16'
-      ]
-    }
-  }
-}
-
-resource virtualNetworks_spoke_vnet_name_spoke_hub_peer 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = {
-  name: '${virtualNetworks_spoke_vnet_name_resource.name}/spoke-hub-peer'
-  properties: {
-    peeringState: 'Connected'
-    remoteVirtualNetwork: {
-      id: virtualNetworks_hub_vnet_name_resource.id
-    }
-    allowVirtualNetworkAccess: true
-    allowForwardedTraffic: true
-    allowGatewayTransit: false
-    useRemoteGateways: true
-    remoteAddressSpace: {
-      addressPrefixes: [
-        '10.0.0.0/16'
-      ]
-    }
-  }
-}
-
-resource storageAccounts_stgmicrohackfiles_name_default_data 'Microsoft.Storage/storageAccounts/fileServices/shares@2021-04-01' = {
-  name: '${storageAccounts_stgmicrohackfiles_name}/default/data'
-  properties: {
-    accessTier: 'Premium'
-    shareQuota: 1024
-    enabledProtocols: 'SMB'
-  }
-  dependsOn: [
-    storageAccounts_stgmicrohackfiles_name_resource
-  ]
 }

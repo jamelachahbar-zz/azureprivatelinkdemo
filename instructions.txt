@@ -1,0 +1,6 @@
+AD Server
+Join Storage acc to AD
+add permissions, users
+test
+Add DFS-N to have same name as old fileserver
+https://www.youtube.com/watch?v=jd49W33DxkQ
