@@ -1,8 +1,8 @@
 # Azure Private Link Demo
 
-This is a demo showing the usage of private link when using Azure Fileshare in an Enterprise Setting.
+This is a demo showing the usage of private link for Azure Fileshare in an Enterprise Setting.
 
-# Contents
+## Contents
 
 [Demolab introduction and context](#Scenario)
 
@@ -20,15 +20,18 @@ This is a demo showing the usage of private link when using Azure Fileshare in a
 Part two: assign share-level permissions to an identity
 Part three: configure directory and file level permissions over SMB
 Part four: mount a file share from a domain-joined VM
-# Scenario
+
+## Scenario
+
 Inc. Corporation is a Communications Company. The organisation works within a regulated industry and would like to secure their use of Azure Platform-as-a-service (PaaS) products. As part of their ongoing evaluation of platform features, the IT team has started to look at using **Azure Private Link**.
 
-# Context
+## Context
+
 This Lab walks through the use of Azure Private Link with a focus on the required changes needed for DNS. Specifically, this builds up to include working with an existing custom DNS infrastructure (I.e. a customer using their own Virtual Machines for Internal DNS Resolution). In this lab we use Microsoft DNS running on top of Microsoft Windows Server 2019.
 
-# Pre-requisites
+## Pre-requisites
 
-## Overview
+### Overview
 
 In order to use the Demolab time most effectively, the following tasks should be completed prior to starting the session.
 With these pre-requisites in place, we can focus on building the differentiated knowledge in Private Link that is required when working with the product, rather than spending hours repeating relatively simple tasks such as setting up Virtual Networks and Virtual Machines.
@@ -37,12 +40,12 @@ At the end of this section your base lab build looks as follows:
 
 ![Architecture Diagram](assets/infra-architecture.png)
 
-# Infrastructure:
+### Infrastructure:
 
 Here is a Hybrid architecture built on Microsoft Azure. The Azure Network Architecture is a traditional Hub and Spoke with vnet connectivity using Vnet Peering.
 To simulate an onprem environment, I used a vnet called on-premise vnet and added a VPN Gateway to simulate an on-prem VPN device that will connect to an Azure vnet using a S2S VPN link.
 
-# Infrastructure Breakdown
+### Infrastructure Breakdown
 
 In summary:
 
@@ -53,28 +56,28 @@ In summary:
 - Azure Bastion is deployed in all VNets to enable easy remote desktop access to the Windows VMs
 - All of the above is deployed within a single resource group called _azureprivatelink-demo-rg_
 
-# Infrastructure Components
+### Infrastructure Components
 
-## AD and DNS
+#### AD and DNS
 
 Active Directory is deployed on VM's both on the on-prem vnet and on the Hub vnet.
 
-## Private Link
+#### Private Link
 
 I am using Azure Private Link Service to deploy an Azure Private endpoint inside the Hub vnet. This deploys a read-only NIC to be able to reach our fileshare service privately using a private IP address i.s.o. the public ip address.
 Because I am leveraging the Hub and Spoke architecture, the spoke vnet can access the fileshare as well. The onprem vnet can access it as well due to the connectivity via VPN Gateway.
 
-## Authentication
+#### Authentication
 
 Leveraging Traditional Active Directory authentication and permissions on the Azure fileshares using a combination of scripts and DNS configurations.
 
 # How to deploy the Infrastructure on your environment?
 
-### Using the Deploy to Azure button to deploy via the Portal
+## Using the Deploy to Azure button to deploy via the Portal
 
 https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-to-azure-button
 
-### Using Azure Devops Pipeline
+## Using Azure Devops Pipeline
 
 Running the pipeline will do the following:
 
@@ -88,7 +91,7 @@ Running the pipeline will do the following:
 
 5. There is a destroy stage (Using pipeline approval). Click on it to review and approve to destroy the whole infrastructure built
 
-# Prerequisite:
+### Prerequisite:
 
 - **Azure DevOps account:** we will use an Azure DevOps project with a Github repo and build/release pipelines. Create your free account and a new project [here](https://azure.microsoft.com/services/devops/).
 
@@ -98,7 +101,7 @@ Running the pipeline will do the following:
 
 - **Service Principal:** we will leverage SPN with contributor access to create resources on Azure from Azure DevOps
 
-# Create a resource group in Azure
+## Create a resource group in Azure
 
     #Login to Azure
     az login
@@ -156,4 +159,3 @@ Login to Github and authorize it for Azure DevOps. Select the forked repo and it
 ![buildstages](assets/completebuild.jpeg)
 
 # challenge-1--deploy-a-private-endpoint-to-utilise-azure-private-link-for-access-to-azure-fileshare
-
