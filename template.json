@@ -6,6 +6,12 @@
     "description": "Create or update a Hub and Spoke Infrastructure connected to an on-prem environment."
   },
   "parameters": {
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "description"
+      }
+    },
     "hubvnetName": {
       "defaultValue": "hub-vnet",
       "type": "String"
@@ -113,7 +119,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-11-01",
       "name": "[parameters('hubBastionPipName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "tags": {
         "deployment": "bicep",
         "environment": "hub",
@@ -136,7 +142,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-11-01",
       "name": "[parameters('hubVpnGatewayPipName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "sku": {
         "name": "Basic",
         "tier": "Regional"
@@ -153,7 +159,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-11-01",
       "name": "[parameters('onpremBastionPipName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "tags": {
         "deployment": "bicep",
         "environment": "onprem",
@@ -176,7 +182,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-11-01",
       "name": "[parameters('onpremVpnGatewayPipName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "sku": {
         "name": "Basic",
         "tier": "Regional"
@@ -194,7 +200,7 @@
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2020-11-01",
       "name": "[parameters('onpremVnetName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "tags": {
         "deployment": "bicep",
         "environment": "onprem",
@@ -247,7 +253,7 @@
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "2021-04-01",
       "name": "[parameters('storageAccounts_stgmicrohackfiles_name')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "sku": {
         "name": "Premium_LRS",
         "tier": "Premium"
@@ -292,7 +298,7 @@
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2020-12-01",
       "name": "[parameters('azDnsVmName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkInterfaces', parameters('azDnsNicName'))]"
       ],
@@ -356,7 +362,7 @@
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2020-12-01",
       "name": "[parameters('azMgmtVmName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkInterfaces', parameters('azMgmtNicName'))]"
       ],
@@ -419,7 +425,7 @@
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2020-12-01",
       "name": "[parameters('onpremDnsVmName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkInterfaces', parameters('onpremDnsNicName'))]"
       ],
@@ -483,7 +489,7 @@
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2020-12-01",
       "name": "[parameters('onpremMgmtVmName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkInterfaces', parameters('onpremMgmtNicName'))]"
       ],
@@ -546,7 +552,7 @@
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2020-12-01",
       "name": "[concat(parameters('azDnsVmName'), '/install-dns-az-dc')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines', parameters('azDnsVmName'))]"
       ],
@@ -565,7 +571,7 @@
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2020-12-01",
       "name": "[concat(parameters('onpremDnsVmName'), '/install-dns-onprem-dc')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines', parameters('onpremDnsVmName'))]"
       ],
@@ -584,7 +590,7 @@
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2020-11-01",
       "name": "[parameters('azDnsNicName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hubvnetName'), 'DNSSubnet')]"
       ],
@@ -619,7 +625,7 @@
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2020-11-01",
       "name": "[parameters('azMgmtNicName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('spokeVnetName'), 'InfrastructureSubnet')]"
       ],
@@ -654,7 +660,7 @@
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2020-11-01",
       "name": "[parameters('onpremDnsNicName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('onpremVnetName'), 'InfrastructureSubnet')]"
       ],
@@ -689,7 +695,7 @@
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2020-11-01",
       "name": "[parameters('onpremMgmtNicName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('onpremVnetName'), 'InfrastructureSubnet')]"
       ],
@@ -724,7 +730,7 @@
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2020-11-01",
       "name": "[parameters('hubvnetName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [],
       "tags": {
         "deployment": "bicep",
@@ -805,7 +811,7 @@
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2020-11-01",
       "name": "[parameters('spokeVnetName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubvnetName'))]"
       ],
@@ -989,7 +995,7 @@
       "type": "Microsoft.Network/bastionHosts",
       "apiVersion": "2020-11-01",
       "name": "[parameters('hubBastionHostName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/publicIPAddresses', parameters('hubBastionPipName'))]",
         "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hubvnetName'), 'AzureBastionSubnet')]"
@@ -1023,7 +1029,7 @@
       "type": "Microsoft.Network/bastionHosts",
       "apiVersion": "2020-11-01",
       "name": "[parameters('onpremBastionHostName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/publicIPAddresses', parameters('onpremBastionPipName'))]",
         "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('onpremVnetName'), 'AzureBastionSubnet')]"
@@ -1058,7 +1064,7 @@
       "type": "Microsoft.Network/connections",
       "apiVersion": "2020-11-01",
       "name": "[parameters('hub-onprem-connectionName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('hubVpnGatewayName'))]",
         "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('onpremVpnGatewayName'))]"
@@ -1088,7 +1094,7 @@
       "type": "Microsoft.Network/connections",
       "apiVersion": "2020-11-01",
       "name": "[parameters('onprem-hub-connectionName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('onpremVpnGatewayName'))]",
         "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('hubVpnGatewayName'))]"
@@ -1123,7 +1129,7 @@
       "type": "Microsoft.Network/virtualNetworkGateways",
       "apiVersion": "2020-11-01",
       "name": "[parameters('hubVpnGatewayName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/publicIPAddresses', parameters('hubVpnGatewayPipName'))]",
         "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hubvnetName'), 'GatewaySubnet')]"
@@ -1182,7 +1188,7 @@
       "type": "Microsoft.Network/virtualNetworkGateways",
       "apiVersion": "2020-11-01",
       "name": "[parameters('onpremVpnGatewayName')]",
-      "location": "westeurope",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/publicIPAddresses', parameters('onpremVpnGatewayPipName'))]",
         "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('onpremVnetName'), 'GatewaySubnet')]"
