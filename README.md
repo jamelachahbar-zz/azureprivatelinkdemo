@@ -76,6 +76,7 @@ Leveraging Traditional Active Directory authentication and permissions on the Az
 ## Using the Deploy to Azure button to deploy via the Portal
 
 https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-to-azure-button
+![Deploy to Azure](https://aka.ms/deploytoazurebutton)
 
 ## Using Azure Devops Pipeline
 
