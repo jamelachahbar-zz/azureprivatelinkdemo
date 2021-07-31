@@ -135,7 +135,10 @@ Create a service connection for the pipeline using the details of the service pr
 
 ## :checkered_flag: Results
 
-- You have deployed a
+- You have deployed a basic Azure and On-Premises environment using an ARM Template
+- You have become familiar with the components you have deployed in your subscription
+- You are now able to login to all VMs using your specified credentials
+- End-to-end network connectivity has been verified from On-Premises to Azure
 
 ## Create a multi Stage pipeline with Yaml
 
@@ -160,3 +163,17 @@ Login to Github and authorize it for Azure DevOps. Select the forked repo and it
 ![buildstages](assets/completebuild.jpeg)
 
 # challenge-1--deploy-a-private-endpoint-to-utilise-azure-private-link-for-access-to-azure-fileshare
+
+### Goal
+
+In order to access your File Share via its "Private interface" we need to setup a new Private Endpoint and map this to your specific Fileshare. This will allow us to access the File Share from your _az-mgmt-vm_ VM, without using the Public interface via an IP or Virtual Network Firewall Rules.
+
+## Task 1 : Setup Private Endpoint
+
+- Search for Private Link in the portal and click on "Create private endpoint".
+- Deploy to the azureprivatelinkdemo resource group and give it a name such as Pep-Fileshare
+- Within step 2 "resource" we choose which PaaS service we want to point our Private Endpoint at. Look within your directory to find your Storage Account (Find Microsoft.Storage/storageAccounts)
+- Within step 3 "configuration" we choose where to place your Private Endpoint NIC. Place it within the same InfrastructureSubnet as your _az-mgmt-vm_ VM (within the Spoke).
+- Leave the Private DNS Integration at the default "yes".
+
+![image](assets/deploypeportal.PNG)
